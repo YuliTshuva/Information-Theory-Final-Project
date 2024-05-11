@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<style>
+
+    .hidden {
+        display: none;
+    }
+
+    .glow-button {
+        background-color: #3498db; /* Default background color */
+        color: #ffffff; /* Default text color */
+        padding: 15px 20px;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+        outline: none;
+        transition: background-color 0.3s, box-shadow 0.3s;
+    }
+
+    .glow-button:hover {
+        background-color: #2980b9; /* Hover background color */
+    }
+
+    .glow-button.selected {
+        background-color: plum; /* Selected background color */
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Add a box shadow when selected */
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<script>
+    function glow1() {
+        // Remove 'selected' class from all buttons
+        let buttons = document.querySelectorAll('.glow-button');
+        buttons.forEach(function (btn) {
+            btn.classList.remove('selected');
+        });
+
+        // Add 'selected' class to the clicked button
+        let selectedButton = document.getElementById('Encode');
+        selectedButton.classList.add('selected');
+
+        // Update the value of the hidden input with the id/name of the selected button
+        document.getElementById('action').value = "Encode";
+    }
+
+    function glow2() {
+        // Remove 'selected' class from all buttons
+        let buttons = document.querySelectorAll('.glow-button');
+        buttons.forEach(function (btn) {
+            btn.classList.remove('selected');
+        });
+
+        // Add 'selected' class to the clicked button
+        let selectedButton = document.getElementById('Decode');
+        selectedButton.classList.add('selected');
+
+        // Update the value of the hidden input with the id/name of the selected button
+        document.getElementById('action').value = "Decode";
+    }
+
+</script>
+
+{% if error %}
+<br>
+<div class="alert alert-danger container" role="alert">
+    <h3>{{ error }}</h3>
+</div>
+<br>
+{% endif %}
+
+{% if success %}
+<br>
+<div class="success alert-success container" role="alert">
+    <h3>{{success}}</h3>
+    <br>
+    <h4>Successfully Transformed {{ input_size }} bytes file to {{ output_size }} bytes file.</h4>
+</div>
+{% endif %}
+
+<br>
+<div class="text-center">
+    <h1>LZW Algorithm</h1>
+</div>
+<div class="container text-center">
+    <br>
+    <br>
+    <form action="/process_form" method="post" enctype="multipart/form-data">
+        <input type="text" hidden id="action" name="action" value="None">
+        <div class="row">
+            <div class="col">
+                <label>What Would you like to do?</label>
+                <br>
+                <br>
+                <button class="glow-button" onclick="glow1()" id="Encode" name="Encode" type="button">Encode</button>
+                <button class="glow-button" onclick="glow2()" id="Decode" name="Decode" type="button">Decode</button>
+            </div>
+        </div>
+        <br>
+        <div class="row col">
+            <label>Please upload a file (with extension .txt/.lzw):</label>
+            <br>
+            <div class="col" style="letter-spacing: 1000px">
+                <input type="file" name="file" id="file" accept=".txt,.lzw">
+            </div>
+        </div>
+        <br>
+        <br>
+        <button type="submit" style="background-color: darkturquoise;">Execute</button>
+        <br>
+        <br>
+        <br>
+    </form>
+</div>
+
+{% if output_path %}
+<div class="container text-center">
+    <h2>Output File:</h2>
+    <br>
+    <a class="form-label badge text-bg-dark" href="{{ output_path }}" download="{{ output_name }}" style="font-size: 18px;">Download Output
+        File</a>
+    <br>
+    <br>
+    <br>
+</div>
+{% endif %}
+
+{% endblock %}
