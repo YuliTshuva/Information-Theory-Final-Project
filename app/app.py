@@ -162,50 +162,58 @@ def about():
 
 @app.route("/process_form", methods=["POST", "GET"])
 def process_form():
-    # Get the requested action
-    action = request.form["action"]
+    try:
+        # Get the requested action
+        action = request.form["action"]
 
-    if action == "None":
-        return render_template("index.html", error="Please choose an action")
+        if action == "None":
+            return render_template("index.html", error="Please choose an action")
 
-    # Get the posted file
-    file = request.files["file"]
+        # Get the posted file
+        file = request.files["file"]
 
-    # Check if the file is empty
-    if file.filename == "":
-        return render_template("index.html", error="Please choose a file")
+        # Check if the file is empty
+        if file.filename == "":
+            return render_template("index.html", error="Please choose a file")
 
-    # Save the file
-    save_path = join("static", file.filename)
-    file.save(save_path)
+        if action == "Encode" and file.filename.split(".")[-1] == "lzw":
+            return render_template("index.html", error="The file is already compressed.")
+        if action == "Decode" and file.filename.split(".")[-1] == "txt":
+            return render_template("index.html", error="The file is already decompressed.")
 
-    # Check if the file is empty
-    if os.stat(save_path).st_size == 0:
-        return render_template("index.html", error="The file is empty")
+        # Save the file
+        save_path = join("static", file.filename)
+        file.save(save_path)
 
-    # Extract the file name without the extension
-    name_without_extension = file.filename.split(".")[0]
+        # Check if the file is empty
+        if os.stat(save_path).st_size == 0:
+            return render_template("index.html", error="The file is empty")
 
-    # Encode/Decode the file
+        # Extract the file name without the extension
+        name_without_extension = file.filename.split(".")[0]
 
-    if action == "Encode":
-        success = "Encoded successfully!"
-        output_name = name_without_extension + "_compressed.lzw"
-        output_path = join("static", output_name)
-        encode(input_file=save_path, save_path=output_path)
+        # Encode/Decode the file
 
-    if action == "Decode":
-        success = "Decoded successfully!"
-        output_name = name_without_extension + "_decompressed.txt"
-        output_path = join("static", output_name)
-        decode(input_file=save_path, save_path=output_path)
+        if action == "Encode":
+            success = "Encoded successfully!"
+            output_name = name_without_extension + "_compressed.lzw"
+            output_path = join("static", output_name)
+            encode(input_file=save_path, save_path=output_path)
 
-    # Calculate the files sizes
-    input_size = get_file_size(save_path)
-    output_size = get_file_size(output_path)
+        if action == "Decode":
+            success = "Decoded successfully!"
+            output_name = name_without_extension + "_decompressed.txt"
+            output_path = join("static", output_name)
+            decode(input_file=save_path, save_path=output_path)
 
-    return render_template("index.html", output_path=output_path, output_name=output_name,
-                           success=success, input_size=input_size, output_size=output_size)
+        # Calculate the files sizes
+        input_size = get_file_size(save_path)
+        output_size = get_file_size(output_path)
+
+        return render_template("index.html", output_path=output_path, output_name=output_name,
+                               success=success, input_size=input_size, output_size=output_size)
+    except Exception as e:
+        return render_template("index.html", error=f"The following error occurred: {e}.")
 
 
 if __name__ == "__main__":
