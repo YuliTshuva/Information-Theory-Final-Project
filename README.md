@@ -1,4 +1,4 @@
-# LZE compression Implementation website
+# LZW compression Implementation website
 
 This repository represent the final project in course 
 'Information Theory' by Or Shkuri and Yuli Tshuva.
