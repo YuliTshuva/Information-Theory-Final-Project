@@ -5,8 +5,21 @@ This repository represent the final project in course
 
 The repository contains a flask web application that is fully
 interfaced with compression and decompression by LZW algorithm
-which has been proven to be the best among all available algorithms 
-(and even being used in zip files).
+which has been proven to be the best among all available algorithms at its time
+(and even being used in these days).
+
+A bit about the LZW algorithm (from Wikipedia):
+
+Lempel–Ziv–Welch (LZW) is a universal lossless data compression 
+algorithm created by Abraham Lempel, Jacob Ziv, and Terry Welch. 
+It was published by Welch in 1984 as an improved implementation of 
+the LZ78 algorithm published by Lempel and Ziv in 1978. 
+The algorithm is simple to implement and has the potential for very 
+high throughput in hardware implementations. It is the algorithm of the 
+Unix file compression utility compress and is used in the GIF image format.
+
+You can read more about the algorithm in the following link:
+https://en.wikipedia.org/wiki/Lempel%E2%80%93Ziv%E2%80%93Welch
 
 To activate the web application, first clone the repository.
 
